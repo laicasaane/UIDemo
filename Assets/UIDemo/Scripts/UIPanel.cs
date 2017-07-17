@@ -12,6 +12,7 @@ namespace UIDemo
         [SerializeField]
         protected CanvasGroup canvasGroup;
 
+        [Header("Panel")]
         [SerializeField]
         protected bool hiddenByDefault = true;
 

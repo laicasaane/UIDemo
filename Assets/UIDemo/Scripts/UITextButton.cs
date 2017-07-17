@@ -7,6 +7,7 @@ namespace UIDemo
     [DisallowMultipleComponent]
     public class UITextButton : UITextBox
     {
+        [Header("Button")]
         [SerializeField]
         protected Button button;
 

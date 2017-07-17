@@ -7,24 +7,12 @@ namespace UIDemo
 {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
-    public class UIDialog : UIPanel
+    [RequireComponent(typeof(CanvasGroup))]
+    public class UIDialog : UITextPanel
     {
+        [Header("Dialog")]
         [SerializeField]
         protected DialogType type = DialogType.CancelOK;
-
-        [Header("Content")]
-        [SerializeField]
-        protected TextMeshProUGUI text;
-
-        [SerializeField]
-        [Multiline]
-        protected string content = "Text";
-
-        [SerializeField]
-        protected float fontSize = 20;
-
-        [SerializeField]
-        protected Color textColor = Color.black;
 
         [Header("Buttons")]
         [SerializeField]
@@ -67,16 +55,6 @@ namespace UIDemo
         protected override void OnValidate()
         {
             base.OnValidate();
-
-            if (this.fontSize < 0)
-                this.fontSize = 0;
-
-            if (this.text)
-            {
-                this.text.color = this.textColor;
-                this.text.text = this.content;
-                this.text.fontSize = this.fontSize;
-            }
 
             SetCancelActive(false);
             SetOKActive(false);
@@ -121,11 +99,6 @@ namespace UIDemo
                 this.okButton.SetActive(value);
         }
 
-        protected void SetText(string text)
-        {
-            this.text.text = text;
-        }
-
         protected void ApplyType(DialogType type)
         {
             switch (type)
@@ -167,7 +140,7 @@ namespace UIDemo
         public void Open(string content = null, DialogType type = DialogType.CancelOK, ExtendedDelegate onCancel = null, ExtendedDelegate onOK = null)
         {
             if (!string.IsNullOrEmpty(content))
-                this.text.text = content;
+                SetContent(content);
 
             if (this.type != type)
             {

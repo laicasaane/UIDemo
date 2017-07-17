@@ -1,11 +1,10 @@
-﻿using UnityEngine;
-using TMPro;
-using ExtendedLibrary.Events;
+﻿using TMPro;
+using UnityEngine;
 
 namespace UIDemo
 {
     [DisallowMultipleComponent]
-    public class UIText : UIElement
+    public class UITextPanel : UIPanel
     {
         [Header("Content")]
         [SerializeField]
@@ -21,14 +20,6 @@ namespace UIDemo
         [SerializeField]
         protected Color textColor = Color.black;
 
-        [SerializeField]
-        protected ExtendedEvent onSetContent;
-
-        public ExtendedEvent OnSetContent
-        {
-            get { return this.onSetContent; }
-        }
-
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -39,15 +30,14 @@ namespace UIDemo
             if (this.text)
             {
                 this.text.color = this.textColor;
-                this.text.text = this.content;
                 this.text.fontSize = this.fontSize;
+                SetContent(this.content);
             }
         }
 
-        public virtual void SetContent(string content)
+        public void SetContent(string text)
         {
-            this.text.text = content;
-            this.onSetContent.Invoke();
+            this.text.text = text;
         }
     }
 }

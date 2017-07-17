@@ -11,6 +11,7 @@ namespace UIDemo
         [SerializeField]
         protected Image image;
 
+        [Header("Image")]
         [SerializeField]
         protected Color background;
 

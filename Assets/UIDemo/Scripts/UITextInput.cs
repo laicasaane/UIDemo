@@ -6,6 +6,7 @@ namespace UIDemo
     [DisallowMultipleComponent]
     public class UITextInput : UITextBox
     {
+        [Header("Input")]
         [SerializeField]
         protected TMP_InputField inputField;
 

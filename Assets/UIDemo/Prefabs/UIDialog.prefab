@@ -479,11 +479,11 @@ MonoBehaviour:
   onHide:
     listeners: []
     returnTypeName: 
-  type: 2
   text: {fileID: 114151744416526930}
   content: Text
   fontSize: 20
   textColor: {r: 0.21568628, g: 0.21568628, b: 0.21568628, a: 1}
+  type: 2
   cancelButton: {fileID: 114706580681521270}
   okButton: {fileID: 114661499574064198}
   buttonLayout: {fileID: 114286001313962094}

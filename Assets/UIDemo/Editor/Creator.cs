@@ -56,5 +56,11 @@ namespace UIDemo.Editor
         {
             Create<UIDialog>("CreateUIDialog");
         }
+
+        [MenuItem("GameObject/UI/UIDemo/UIInfoBox")]
+        public static void CreateUIInfoBox()
+        {
+            Create<UIInfoBox>("CreateUIInfoBox");
+        }
     }
 }
