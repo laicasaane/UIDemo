@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace UIDemo
 {
+    [ExecuteInEditMode]
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(CanvasGroup))]
     public class UITextPanel : UIPanel
     {
         [Header("Content")]
