@@ -7,20 +7,16 @@ namespace UIDemo
     [DisallowMultipleComponent]
     public class UITextBox : UIText
     {
-        [HideInInspector]
+        [Header("Image")]
         [SerializeField]
         protected Image image;
 
-        [Header("Image")]
         [SerializeField]
         protected Color background;
 
         protected override void OnValidate()
         {
             base.OnValidate();
-
-            if (!this.image)
-                this.image = GetComponent<Image>();
 
             if (this.image)
             {
