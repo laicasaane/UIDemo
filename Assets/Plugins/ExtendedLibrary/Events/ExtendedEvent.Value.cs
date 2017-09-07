@@ -282,7 +282,7 @@ namespace ExtendedLibrary.Events
                         break;
 
                     case ObjectType.Matrix4x4:
-                        this.value = JsonConverter.Deserialize<Matrix4x4>(this.serializedValue);
+                        this.value = this.serializedValue.ToObject<Matrix4x4>();
                         break;
 
                     case ObjectType.AnimationCurve:
@@ -298,7 +298,7 @@ namespace ExtendedLibrary.Events
                     case ObjectType.List:
                         try
                         {
-                            var value = JsonConverter.Deserialize(this.serializedValue, typeOf);
+                            var value = this.serializedValue.ToObject(typeOf);
 
                             if (value == null)
                             {
@@ -436,7 +436,7 @@ namespace ExtendedLibrary.Events
                         case ObjectType.SerializableType:
                         case ObjectType.Array:
                         case ObjectType.List:
-                            this.serializedValue = JsonConverter.Serialize(value, this.typeOf);
+                            this.serializedValue = value.ToJson(this.typeOf);
                             break;
 
                         default:

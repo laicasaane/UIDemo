@@ -49,6 +49,13 @@ namespace ExtendedLibrary.Events
                     break;
 
                 case ObjectType.Matrix4x4:
+                    {
+                        var matrix = property.stringValue.ToObject<Matrix4x4>();
+                        matrix = EditorFields.Matrix4x4Field(this.infos.memberData.guiLabel, matrix);
+                        property.stringValue = matrix.ToJson();
+                    }
+                    break;
+
                 case ObjectType.SerializableType:
                 case ObjectType.Array:
                 case ObjectType.List:
@@ -61,7 +68,7 @@ namespace ExtendedLibrary.Events
                                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                         }
 
-                        var data = JsonConverter.Deserialize(property.stringValue, this.typeOf);
+                        var data = property.stringValue.ToObject(this.typeOf);
 
                         if (data == null)
                         {
@@ -89,7 +96,7 @@ namespace ExtendedLibrary.Events
                             this.serializedCloneObject.ApplyModifiedPropertiesWithoutUndo();
                             data = this.cloneValueFieldInfo.GetValue(this.cloneObject);
 
-                            property.stringValue = JsonConverter.Serialize(data, this.typeOf);
+                            property.stringValue = data.ToJson(this.typeOf);
                         }
                     }
                     break;

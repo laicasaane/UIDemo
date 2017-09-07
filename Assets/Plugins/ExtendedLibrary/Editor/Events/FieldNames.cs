@@ -20,6 +20,8 @@ namespace ExtendedLibrary.Events
 
             public const string Target = "target";
 
+            public const string TargetName = "targetName";
+
             public const string SelectedLabel = "selectedLabel";
 
             public const string MemberFilter = "memberFilter";

@@ -1,10 +1,10 @@
-using UnityEditor;
+﻿using UnityEngine;
 
-namespace UnityEngine
+namespace UnityEditor
 {
     [CanEditMultipleObjects]
-    [CustomPropertyDrawer(typeof(Quaternion))]
-    public class QuaternionPropertyDrawer : BasePropertyDrawer<Quaternion>
+    [CustomPropertyDrawer(typeof(Vector4))]
+    public class Vector4PropertyDrawer : BasePropertyDrawer<Vector4>
     {
         protected override float PrimaryHeight
         {
@@ -22,7 +22,7 @@ namespace UnityEngine
             }
         }
 
-        protected override void DrawProperty(Rect contentPosition, ref Quaternion value)
+        protected override void DrawProperty(Rect contentPosition, ref Vector4 value)
         {
             var itemWidth = contentPosition.width / 4f - RIGHTMOST_MARGIN;
             contentPosition.width = itemWidth;

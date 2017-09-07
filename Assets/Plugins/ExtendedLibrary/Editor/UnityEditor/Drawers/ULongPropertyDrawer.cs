@@ -1,6 +1,6 @@
-using UnityEditor;
+using UnityEngine;
 
-namespace UnityEngine
+namespace UnityEditor
 {
     [CanEditMultipleObjects]
     [CustomPropertyDrawer(typeof(ulong))]

@@ -42,12 +42,12 @@ namespace ExtendedLibrary.Events
             [SerializeField]
             private LevelFilter levelFilter;
 
+#pragma warning restore CS0414
+#endif // UNITY_EDITOR
+
             [HideInInspector]
             [SerializeField]
             private string selectedLabel;
-
-#pragma warning restore CS0414
-#endif // UNITY_EDITOR
 
             [HideInInspector]
             [SerializeField]
@@ -56,6 +56,10 @@ namespace ExtendedLibrary.Events
             [HideInInspector]
             [SerializeField]
             private UnityEngine.Object target;
+
+            [HideInInspector]
+            [SerializeField]
+            private string targetName;
 
             [HideInInspector]
             [SerializeField]
@@ -72,12 +76,45 @@ namespace ExtendedLibrary.Events
                 if (this.index < 0)
                     return null;
 
-                if (this.valueArray == null)
+                try
                 {
-                    this.valueArray = this.values == null ? new Value[0] : this.values.ToArray();
-                }
+#if UNITY_EDITOR
+                    if (this.valueArray == null)
+                    {
+                        this.valueArray = this.values == null ? new Value[0] : this.values.ToArray();
+                    }
 
-                return this.memberInfo.Invoke(this.target, this.valueArray);
+                    this.memberInfo.Initialize(this.target, this.valueArray);
+#endif // UNITY_EDITOR
+
+                    return this.memberInfo.Invoke();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(string.Format("{0}: {1}\n{2}\n{3}", this.targetName, this.selectedLabel, e.Message, e.StackTrace));
+                    return null;
+                }
+            }
+
+            internal void Initialize()
+            {
+                if (this.index < 0)
+                    return;
+
+                try
+                {
+                    if (this.valueArray == null)
+                    {
+                        this.valueArray = this.values == null ? new Value[0] : this.values.ToArray();
+                    }
+
+                    this.memberInfo.Initialize(this.target, this.valueArray);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(string.Format("{0}: {1}\n{2}\n{3}", this.targetName, this.selectedLabel, e.Message, e.StackTrace));
+                    return;
+                }
             }
         }
     }

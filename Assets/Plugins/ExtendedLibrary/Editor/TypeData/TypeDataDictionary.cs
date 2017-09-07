@@ -7,7 +7,7 @@ using UnityEditor;
 
 namespace ExtendedLibrary
 {
-    public class TypeDataDictionary : ScriptableObject, ISerializationCallbackReceiver
+    public class TypeDataDictionary : ScriptableObject
     {
         private const string ROOT_FOLDER = "Assets";
         private const string SECONDARY_FOLDER = "Editor";
@@ -74,8 +74,6 @@ namespace ExtendedLibrary
         [SerializeField]
         private List<TypeData> values;
 
-        private Dictionary<string, TypeData> dictionary;
-
         public string[][] GetSavedTypes()
         {
             var savedTypes = new string[this.types.Count][];
@@ -86,26 +84,6 @@ namespace ExtendedLibrary
             }
 
             return savedTypes;
-        }
-
-        public void OnAfterDeserialize()
-        {
-            if (this.dictionary == null)
-                this.dictionary = new Dictionary<string, TypeData>();
-            else
-                this.dictionary.Clear();
-
-            if (this.keys.Count == this.values.Count)
-            {
-                for (var i = 0; i < this.keys.Count; i++)
-                {
-                    this.dictionary.Add(this.keys[i], this.values[i]);
-                }
-            }
-        }
-
-        public void OnBeforeSerialize()
-        {
         }
 
         public void ClearData()
@@ -134,10 +112,12 @@ namespace ExtendedLibrary
 
         public TypeData GetValue(Type type, BindingFlags flags)
         {
-            TypeData result = null;
-            this.dictionary.TryGetValue(ComposeKey(type, flags), out result);
+            var key = this.keys.IndexOf(ComposeKey(type, flags));
 
-            return result;
+            if (key >= 0 && key < this.values.Count)
+                return this.values[key];
+
+            return null;
         }
 
         private bool IsValidSelection()

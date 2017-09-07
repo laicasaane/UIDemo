@@ -8,39 +8,53 @@ namespace ExtendedLibrary
     {
         private static fsSerializer serializer = new fsSerializer();
 
-        public static object Deserialize(string json, Type type)
+        public static object ToObject(this string json, Type type)
         {
+            object result = null;
+
             try
             {
-                var data = fsJsonParser.Parse(json);
-                object result = null;
-                serializer.TryDeserialize(data, type, ref result);
+                if (!string.IsNullOrEmpty(json) && type != null)
+                {
+                    var data = fsJsonParser.Parse(json);
+                    serializer.TryDeserialize(data, type, ref result);
+                }
 
                 return result;
             }
             catch
             {
-                return JsonUtility.FromJson(json, type);
+                if (!string.IsNullOrEmpty(json) && type != null)
+                    return JsonUtility.FromJson(json, type);
+
+                return result;
             }
         }
 
-        public static T Deserialize<T>(string json)
+        public static T ToObject<T>(this string json)
         {
+            var result = default(T);
+
             try
             {
-                var data = fsJsonParser.Parse(json);
-                T result = default(T);
-                serializer.TryDeserialize<T>(data, ref result);
+                if (!string.IsNullOrEmpty(json))
+                {
+                    var data = fsJsonParser.Parse(json);
+                    serializer.TryDeserialize<T>(data, ref result);
+                }
 
                 return result;
             }
             catch
             {
-                return JsonUtility.FromJson<T>(json);
+                if (!string.IsNullOrEmpty(json))
+                    return JsonUtility.FromJson<T>(json);
+
+                return result;
             }
         }
 
-        public static string Serialize(object value, Type type)
+        public static string ToJson(this object value, Type type)
         {
             try
             {
@@ -55,12 +69,12 @@ namespace ExtendedLibrary
             }
         }
 
-        public static string Serialize<T>(T value)
+        public static string ToJson<T>(T value)
         {
             try
             {
                 fsData result;
-                serializer.TrySerialize<T>(value, out result);
+                serializer.TrySerialize(value, out result);
 
                 return fsJsonPrinter.CompressedJson(result);
             }
@@ -70,11 +84,11 @@ namespace ExtendedLibrary
             }
         }
 
-        public static string Serialize<T>(object value)
+        public static string ToJson<T>(this object value)
         {
             try
             {
-                return Serialize((T) value);
+                return ToJson((T) value);
             }
             catch
             {
@@ -82,11 +96,11 @@ namespace ExtendedLibrary
             }
         }
 
-        public static string Serialize(object value)
+        public static string ToJson(this object value)
         {
             try
             {
-                return Serialize(value, value.GetType());
+                return ToJson(value, value.GetType());
             }
             catch
             {

@@ -1,10 +1,10 @@
-using UnityEditor;
+using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 
-namespace UnityEngine
+namespace UnityEditor
 {
     public abstract class BasePropertyDrawer<T> : PropertyDrawer
     {

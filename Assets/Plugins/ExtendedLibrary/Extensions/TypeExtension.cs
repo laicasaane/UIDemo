@@ -30,12 +30,6 @@ namespace ExtendedLibrary
             return value.GetSerializableObjectType() == type;
         }
 
-        public static object CreateSerializableInstance(this Type type)
-        {
-
-            return null;
-        }
-
         public static string GetSerializableAssemblyQualifiedName(this Type type)
         {
             if (type.IsAbstract || type.IsInterface || NotSupportedTypes.Contains(type))
@@ -174,15 +168,12 @@ namespace ExtendedLibrary
                 {
                     try
                     {
-#pragma warning disable 219
-                        var value = (ObjectType) Enum.Parse(typeof(ObjectType), type.Name);
-#pragma warning restore 219
-                        return type.AssemblyQualifiedName;
+                        var result = Enum.Parse(typeof(ObjectType), type.Name);
+
+                        if (result != null && result is ObjectType)
+                            return type.AssemblyQualifiedName;
                     }
-                    catch
-                    {
-                        // Fall-through to check for Serializable attribute at the next if.
-                    }
+                    catch { }
                 }
 
                 if ((type.Attributes & TypeAttributes.Serializable) == TypeAttributes.Serializable)
@@ -264,12 +255,12 @@ namespace ExtendedLibrary
                 {
                     try
                     {
-                        return (ObjectType) Enum.Parse(typeof(ObjectType), type.Name);
+                        var result = (ObjectType)Enum.Parse(typeof(ObjectType), type.Name);
+
+                        return result;
                     }
                     catch
-                    {
-                        // Fall-through to check for Serializable attribute at the next if.
-                    }
+                    { }
                 }
 
                 if ((type.Attributes & TypeAttributes.Serializable) == TypeAttributes.Serializable)
@@ -312,15 +303,12 @@ namespace ExtendedLibrary
                 {
                     try
                     {
-#pragma warning disable 219
-                        var value = (ObjectType) Enum.Parse(typeof(ObjectType), type.Name);
-#pragma warning restore 219
-                        return type.Name;
+                        var result = Enum.Parse(typeof(ObjectType), type.Name);
+
+                        if (result != null && result is ObjectType)
+                            return type.Name;
                     }
-                    catch
-                    {
-                        // Fall-through to check for Serializable attribute at the next if.
-                    }
+                    catch { }
                 }
 
                 if ((type.Attributes & TypeAttributes.Serializable) == TypeAttributes.Serializable)
@@ -386,7 +374,7 @@ namespace ExtendedLibrary
                     return "string";
 
                 default:
-                    return null;
+                    return string.Empty;
             }
         }
     }

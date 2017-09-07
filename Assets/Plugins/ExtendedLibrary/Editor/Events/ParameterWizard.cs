@@ -189,6 +189,13 @@ namespace ExtendedLibrary.Events
                     break;
 
                 case ObjectType.Matrix4x4:
+                    {
+                        var matrix = property.stringValue.ToObject<Matrix4x4>();
+                        matrix = EditorFields.Matrix4x4Field(label, matrix);
+                        property.stringValue = matrix.ToJson();
+                    }
+                    break;
+
                 case ObjectType.SerializableType:
                 case ObjectType.Array:
                 case ObjectType.List:
@@ -206,7 +213,7 @@ namespace ExtendedLibrary.Events
                         var cloneObject = this.cloneObjects[index];
                         var cloneValueFieldInfo = this.cloneValueFieldInfos[index];
 
-                        var data = JsonConverter.Deserialize(property.stringValue, typeOf);
+                        var data = property.stringValue.ToObject(typeOf);
 
                         if (data == null)
                         {
@@ -237,7 +244,7 @@ namespace ExtendedLibrary.Events
                             serializedCloneObject.ApplyModifiedPropertiesWithoutUndo();
                             data = cloneValueFieldInfo.GetValue(cloneObject);
 
-                            property.stringValue = JsonConverter.Serialize(data, typeOf);
+                            property.stringValue = data.ToJson(typeOf);
                         }
                     }
                     break;

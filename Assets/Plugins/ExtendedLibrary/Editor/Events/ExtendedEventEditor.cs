@@ -28,7 +28,7 @@ namespace ExtendedLibrary.Events
         private int lastSelectedIndex;
 
         private string returnTypeName;
-        private bool advanced = false;
+        //private bool advanced = false;
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -86,7 +86,8 @@ namespace ExtendedLibrary.Events
                 state.reorderableList.onReorderCallback = EndDragChild;
                 state.reorderableList.onAddCallback = AddListener;
                 state.reorderableList.onRemoveCallback = RemoveListener;
-                state.reorderableList.elementHeight = this.advanced ? 77f : 59f;
+                //state.reorderableList.elementHeight = this.advanced ? 77f : 59f;
+                state.reorderableList.elementHeight = 77f;
 
                 this.states.Add(property.propertyPath, state);
             }
@@ -101,19 +102,22 @@ namespace ExtendedLibrary.Events
 
             EditorGUI.LabelField(rect, string.Format(HEADER_FORMAT, this.header, returnTypeName));
 
-            var advancedRect = new Rect(rect)
-            {
-                xMin = rect.xMax - 75f
-            };
+            //var advancedRect = new Rect(rect)
+            //{
+            //    xMin = rect.xMax - 75f
+            //};
 
-            var toggle = EditorGUI.ToggleLeft(advancedRect, "Advanced", this.advanced);
+            //var toggle = EditorGUI.ToggleLeft(advancedRect, "Advanced", this.advanced);
 
-            if (this.advanced != toggle)
-            {
-                this.advanced = toggle;
-                var state = GetState(this.rootProperty);
-                state.reorderableList.elementHeight = toggle ? 77f : 59f;
-            }
+            //if (this.advanced != toggle)
+            //{
+            //    this.advanced = toggle;
+            //    var state = GetState(this.rootProperty);
+            //    state.reorderableList.elementHeight = toggle ? 77f : 59f;
+            //}
+
+            var state = GetState(this.rootProperty);
+            state.reorderableList.elementHeight = 77f;
         }
 
         private void DrawListener(Rect rect, int index, bool isactive, bool isfocused)
@@ -123,6 +127,7 @@ namespace ExtendedLibrary.Events
             ++rect.y;
 
             var targetProperty = element.FindPropertyRelative(ListenerFields.Target);
+            var targetNameProperty = element.FindPropertyRelative(ListenerFields.TargetName);
             var indexProperty = element.FindPropertyRelative(ListenerFields.Index);
             var selectedLabelProperty = element.FindPropertyRelative(ListenerFields.SelectedLabel);
             var memberFilterProperty = element.FindPropertyRelative(ListenerFields.MemberFilter);
@@ -140,48 +145,52 @@ namespace ExtendedLibrary.Events
 
             EditorGUI.BeginChangeCheck();
             EditorGUI.PropertyField(targetRect, targetProperty, GUIContent.none);
+
+            if (!ReferenceEquals(targetProperty.objectReferenceValue, null))
+                targetNameProperty.stringValue = targetProperty.objectReferenceValue.name;
+
             serializedObject.ApplyModifiedProperties();
 
             MemberFilter memberFilter;
             VisibilityFilter visibilityFilter;
             LevelFilter levelFilter;
 
-            if (this.advanced)
-            {
-                var memberFilterRect = new Rect(rect);
-                memberFilterRect.width *= 0.3f;
-                memberFilterRect.height = 16f;
-                memberFilterRect.y += 20f;
+            //if (this.advanced)
+            //{
+            var memberFilterRect = new Rect(rect);
+            memberFilterRect.width *= 0.3f;
+            memberFilterRect.height = 16f;
+            memberFilterRect.y += 20f;
 
-                memberFilter = (MemberFilter) EditorGUI.EnumPopup(memberFilterRect, GUIContent.none, (MemberFilter) memberFilterProperty.intValue);
-                memberFilterProperty.intValue = (int) memberFilter;
-                serializedObject.ApplyModifiedProperties();
+            memberFilter = (MemberFilter) EditorGUI.EnumPopup(memberFilterRect, GUIContent.none, (MemberFilter) memberFilterProperty.intValue);
+            memberFilterProperty.intValue = (int) memberFilter;
+            serializedObject.ApplyModifiedProperties();
 
-                var visibilityFilterRect = new Rect(rect);
-                visibilityFilterRect.width *= 0.65f;
-                visibilityFilterRect.xMin = memberFilterRect.xMax + 5f;
-                visibilityFilterRect.height = 16f;
-                visibilityFilterRect.y += 20f;
+            var visibilityFilterRect = new Rect(rect);
+            visibilityFilterRect.width *= 0.65f;
+            visibilityFilterRect.xMin = memberFilterRect.xMax + 5f;
+            visibilityFilterRect.height = 16f;
+            visibilityFilterRect.y += 20f;
 
-                visibilityFilter = (VisibilityFilter) EditorGUI.EnumPopup(visibilityFilterRect, GUIContent.none, (VisibilityFilter) visibilityFilterProperty.intValue);
-                visibilityFilterProperty.intValue = (int) visibilityFilter;
-                serializedObject.ApplyModifiedProperties();
+            visibilityFilter = (VisibilityFilter) EditorGUI.EnumPopup(visibilityFilterRect, GUIContent.none, (VisibilityFilter) visibilityFilterProperty.intValue);
+            visibilityFilterProperty.intValue = (int) visibilityFilter;
+            serializedObject.ApplyModifiedProperties();
 
-                var levelFilterRect = new Rect(rect);
-                levelFilterRect.xMin = visibilityFilterRect.xMax + 5f;
-                levelFilterRect.height = 16f;
-                levelFilterRect.y += 20f;
+            var levelFilterRect = new Rect(rect);
+            levelFilterRect.xMin = visibilityFilterRect.xMax + 5f;
+            levelFilterRect.height = 16f;
+            levelFilterRect.y += 20f;
 
-                levelFilter = (LevelFilter) EditorGUI.EnumPopup(levelFilterRect, GUIContent.none, (LevelFilter) levelFilterProperty.intValue);
-                levelFilterProperty.intValue = (int) levelFilter;
-                serializedObject.ApplyModifiedProperties();
-            }
-            else
-            {
-                memberFilter = (MemberFilter) memberFilterProperty.intValue;
-                visibilityFilter = (VisibilityFilter) visibilityFilterProperty.intValue;
-                levelFilter = (LevelFilter) levelFilterProperty.intValue;
-            }
+            levelFilter = (LevelFilter) EditorGUI.EnumPopup(levelFilterRect, GUIContent.none, (LevelFilter) levelFilterProperty.intValue);
+            levelFilterProperty.intValue = (int) levelFilter;
+            serializedObject.ApplyModifiedProperties();
+            //}
+            //else
+            //{
+            //    memberFilter = (MemberFilter) memberFilterProperty.intValue;
+            //    visibilityFilter = (VisibilityFilter) visibilityFilterProperty.intValue;
+            //    levelFilter = (LevelFilter) levelFilterProperty.intValue;
+            //}
 
             var members = InsertOrUpdateMembers(targetProperty, index, memberFilter, visibilityFilter, levelFilter, this.returnTypeName);
 
@@ -197,10 +206,11 @@ namespace ExtendedLibrary.Events
                 height = 16f,
                 xMin = targetRect.xMin
             };
-            if (this.advanced)
-                memberRect.y += EditorGUIUtility.singleLineHeight * 2 + 6f;
-            else
-                memberRect.y += EditorGUIUtility.singleLineHeight + 4f;
+
+            //if (this.advanced)
+            memberRect.y += EditorGUIUtility.singleLineHeight * 2 + 6f;
+            //else
+            //    memberRect.y += EditorGUIUtility.singleLineHeight + 4f;
 
             EditorGUI.BeginDisabledGroup(targetProperty.objectReferenceValue == null);
             EditorGUI.BeginChangeCheck();
@@ -236,7 +246,6 @@ namespace ExtendedLibrary.Events
                     if (indexValue >= 0)
                     {
                         selectedLabelProperty.stringValue = members.labels[indexValue];
-                        Debug.Log(selectedLabelProperty.stringValue);
                     }
 
                     serializedObject.ApplyModifiedProperties();
@@ -258,10 +267,10 @@ namespace ExtendedLibrary.Events
                 height = 16f
             };
 
-            if (this.advanced)
-                valueRect.y += EditorGUIUtility.singleLineHeight * 3 + 8f;
-            else
-                valueRect.y += EditorGUIUtility.singleLineHeight * 2 + 6f;
+            //if (this.advanced)
+            valueRect.y += EditorGUIUtility.singleLineHeight * 3 + 8f;
+            //else
+            //    valueRect.y += EditorGUIUtility.singleLineHeight * 2 + 6f;
 
             EditorGUI.BeginDisabledGroup(targetProperty.objectReferenceValue == null || indexProperty.intValue < 0);
 
@@ -620,6 +629,8 @@ namespace ExtendedLibrary.Events
                     {
                         returnTypeProperty.enumValueIndex = (int)mem.returnType;
                         memberTypeProperty.enumValueIndex = (int)mem.type;
+                        parameterTypesProperty.InsertArrayElementAtIndex(0);
+                        parameterTypesProperty.GetArrayElementAtIndex(0).stringValue = mem.assemblyQualifiedName;
                         serializedObject.ApplyModifiedProperties();
                     }
                     break;
